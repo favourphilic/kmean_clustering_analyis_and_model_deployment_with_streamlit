@@ -17,12 +17,15 @@ st.header("Clustering Analysis and Model Building")
 @st.cache_data
 def getdata(path):
     df = pd.read_csv(path)
+    df = df[df['HBUS']==1]
+    df = df[df['INCOME'] < 500000]
     return df
 
 df= getdata('SCFP2022.csv')
 st.dataframe(df.head(2))
 st.write(df.shape)
-df = df[df['HBUS']==1]
+#df = df[df['HBUS']==1]
+#df = df[df['INCOME'] < 500000]
 
 
 
@@ -31,13 +34,15 @@ st.sidebar.header("Options")
 with st.sidebar:
      #activebusiness= st.multiselect('Active Business Group', df.HBUS.value_counts(normalize=True).index.to_list())
      add_variable = st.multiselect(
-        "Variable with High Variance", df.var().sort_values().tail(10).index.to_list())
-     incomelevel = int(st.number_input('Enter and income Level limit'))
+        "Variable with High Variance", options=df.var().sort_values().tail(10).index.to_list(),
+          default =df.var().sort_values().tail(5).index.to_list()
+          )
+     #incomelevel = int(st.number_input('Enter and income Level limit'))
      
      
-mask2=(df['INCOME'] < incomelevel) #and  df['HBUS']== activebusiness) 
+#mask2=(df['INCOME'] < incomelevel) #and  df['HBUS']== activebusiness) 
 #mask = [mask1, mask2]
-df= df[mask2]
+#df= df[mask2]
 df= df[add_variable]
 
 st.write("Creating Dataframe with high variance variable such as *ASSET*, *NETWORK*, *FIN*, *EQUITY*, *NFIM* ")
